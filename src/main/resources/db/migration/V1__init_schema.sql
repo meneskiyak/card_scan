@@ -1,4 +1,3 @@
--- Diyagramınızdaki 'contact_detail_type' için özel bir tip
 CREATE TYPE contactdetailtype AS ENUM ('PHONE', 'EMAIL', 'WEBSITE', 'ADDRESS');
 
 -- Users (Uygulama Kullanıcıları)

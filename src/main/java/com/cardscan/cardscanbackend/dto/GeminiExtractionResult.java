@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-// JSON'da olup burada olmayan alanları (örn: Gemini'ın eklediği $schema) yok say
+// JSON'da olup burada olmayan alanları (örn: Gemini'ın eklediği) yok say
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeminiExtractionResult {
 
@@ -18,12 +18,8 @@ public class GeminiExtractionResult {
     private List<String> websites; // Hem kişisel hem kurumsal olabilir buraya BAKILACAKKKKKK!!!!
     private List<String> addresses;
 
-    // İç içe JSON nesneleri için
     private List<SocialMediaAccount> socialMedia;
-
-    // Etiketler
-    private List<String> tags; //
-
+    private List<String> tags;
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)

@@ -30,7 +30,6 @@ public class SecurityConfig {
     @Autowired
     private UserService userService;
 
-    // Özel "adlandırılmış" bean'i enjekte etmeye gerek yok
 
     public class FirebaseTokenFilter extends OncePerRequestFilter {
 

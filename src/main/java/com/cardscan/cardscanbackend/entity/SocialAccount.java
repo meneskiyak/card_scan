@@ -19,7 +19,7 @@ public class SocialAccount {
     private UUID socialId;
 
     @Column(name = "platform_name", nullable = false, length = 50)
-    private String platformName; // "linkedin", "twitter", "github" vb.
+    private String platformName;
 
     @Column(name = "profile_url", nullable = false, columnDefinition = "TEXT")
     private String profileUrl;

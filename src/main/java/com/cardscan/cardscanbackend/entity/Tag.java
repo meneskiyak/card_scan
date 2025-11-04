@@ -21,7 +21,7 @@ public class Tag {
     private UUID tagId;
 
     @Column(name = "name", unique = true, nullable = false, length = 100)
-    private String name; // "#teknoloji", "#finans"
+    private String name;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

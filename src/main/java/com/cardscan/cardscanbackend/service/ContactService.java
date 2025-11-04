@@ -1,7 +1,10 @@
 package com.cardscan.cardscanbackend.service;
 
+import com.cardscan.cardscanbackend.dto.ContactDetailDTO;
+import com.cardscan.cardscanbackend.dto.CreateContactRequestDTO;
+import com.cardscan.cardscanbackend.dto.ContactSummaryDTO;
 import com.cardscan.cardscanbackend.dto.GeminiExtractionResult;
-import com.cardscan.cardscanbackend.entity.*; // Tüm entity'ler
+import com.cardscan.cardscanbackend.entity.*;
 import com.cardscan.cardscanbackend.repository.CompanyRepository;
 import com.cardscan.cardscanbackend.repository.ContactRepository;
 import com.cardscan.cardscanbackend.repository.TagRepository;
@@ -10,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactService {
@@ -29,33 +35,30 @@ public class ContactService {
     }
 
     @Transactional
-    public Contact createContactFromExtraction(
-            GeminiExtractionResult dto,
-            User user,
-            String rawText,
-            String imageUrl
-    ) {
-        if (user == null) {
+    public Contact createContact(CreateContactRequestDTO requestDTO, User currentUser) {
+
+        if (currentUser == null) {
             throw new IllegalArgumentException("User null olamaz!");
         }
 
-        // 1. ŞİRKETİ BUL VEYA YARAT (findOrCreate)
+        GeminiExtractionResult dto = requestDTO.getConfirmedData();
+        String imageUrl = requestDTO.getImageUrl();
+        String rawText = requestDTO.getRawText();
+
         Company company = null;
         if (dto.getOrganization() != null && !dto.getOrganization().isEmpty()) {
             company = companyRepository.findByName(dto.getOrganization())
                     .orElseGet(() -> {
                         Company newCompany = new Company();
                         newCompany.setName(dto.getOrganization());
-                        // Şirket web sitesini de DTO'dan alabiliriz
                         if (dto.getWebsites() != null && !dto.getWebsites().isEmpty()) {
-                            // Genelde ilk web sitesi şirketinki olur
                             newCompany.setWebsite(dto.getWebsites().get(0));
                         }
                         return companyRepository.save(newCompany);
                     });
         }
 
-        // 2. ETİKETLERİ BUL VEYA YARAT (findOrCreate)
+
         Set<Tag> tags = new HashSet<>();
         if (dto.getTags() != null) {
             for (String tagName : dto.getTags()) {
@@ -65,24 +68,21 @@ public class ContactService {
             }
         }
 
-        // 3. ANA CONTACT NESNESİNİ OLUŞTUR
+
         Contact contact = new Contact();
         contact.setFullName(dto.getFullName());
         contact.setTitle(dto.getTitle());
-        contact.setUser(user);
+        contact.setUser(currentUser);
         contact.setCompany(company);
         contact.setTags(tags);
 
-        // 4. ALT NESNELERİ (ÇOCUKLARI) OLUŞTUR VE CONTACT'A BAĞLA
 
-        // 4a. CardScan (Bu tarama işlemi)
         CardScan scan = new CardScan();
         scan.setImageUrl(imageUrl);
         scan.setRecognizedText(rawText);
-        scan.setContact(contact); // Çift yönlü ilişki
+        scan.setContact(contact);
         contact.getCardScans().add(scan);
 
-        // 4b. ContactDetails (Telefon, Email vb.)
         if (dto.getPhones() != null) {
             for (String phone : dto.getPhones()) {
                 addContactDetail(contact, ContactDetailType.PHONE, phone);
@@ -104,26 +104,55 @@ public class ContactService {
             }
         }
 
-        // 4c. SocialAccounts (LinkedIn, GitHub vb.)
         if (dto.getSocialMedia() != null) {
             for (GeminiExtractionResult.SocialMediaAccount socialDto : dto.getSocialMedia()) {
                 SocialAccount sa = new SocialAccount();
                 sa.setPlatformName(socialDto.getPlatform());
                 sa.setProfileUrl(socialDto.getUrl());
-                sa.setContact(contact); // Çift yönlü ilişki
+                sa.setContact(contact);
                 contact.getSocialAccounts().add(sa);
             }
         }
 
-        // 5. KAYDET
-        // @Transactional ve CascadeType.ALL sayesinde,
-        // SADECE 'contact' nesnesini kaydetmek,
-        // ona bağlı tüm 'CardScan', 'ContactDetail' ve 'SocialAccount' nesnelerini de
-        // otomatik olarak veritabanına ekleyecektir.
         return contactRepository.save(contact);
     }
 
-    // Helper metot
+    @Transactional(readOnly = true)
+    public List<ContactSummaryDTO> getContactsForUser(User user) {
+
+        List<Contact> contacts = contactRepository.findByUser(user);
+
+        return contacts.stream()
+                .map(this::convertToSummaryDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ContactDetailDTO getContactDetails(UUID contactId, User currentUser) {
+
+        Contact contact = contactRepository.findByContactIdAndUser(contactId, currentUser)
+                .orElseThrow(() -> new RuntimeException("Contact not found or does not belong to user"));
+        // TODO: 'RuntimeException' yerine özel bir 'ResourceNotFoundException' fırlatmak daha iyidir.
+
+        return ContactDetailDTO.fromEntity(contact);
+    }
+
+
+    private ContactSummaryDTO convertToSummaryDTO(Contact contact) {
+        ContactSummaryDTO dto = new ContactSummaryDTO();
+        dto.setContactId(contact.getContactId());
+        dto.setFullName(contact.getFullName());
+        dto.setTitle(contact.getTitle());
+
+        if (contact.getCompany() != null) {
+            dto.setOrganizationName(contact.getCompany().getName());
+        } else {
+            dto.setOrganizationName(null);
+        }
+
+        return dto;
+    }
+
     private void addContactDetail(Contact contact, ContactDetailType type, String value) {
         ContactDetail detail = new ContactDetail();
         detail.setType(type);

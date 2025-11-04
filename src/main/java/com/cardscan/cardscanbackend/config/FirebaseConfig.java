@@ -13,10 +13,9 @@ import java.io.InputStream;
 @Configuration
 public class FirebaseConfig {
 
-    @PostConstruct // Uygulama başlarken çalışacak
+    @PostConstruct
     public void initialize() {
         try {
-            // Proje B'nin anahtarı (Artık her şey için bu kullanılacak)
             ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
             InputStream serviceAccount = resource.getInputStream();
 
@@ -24,7 +23,6 @@ public class FirebaseConfig {
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
-            // FirebaseApp'i yalnızca bir kez ve "varsayılan" (default) olarak başlat
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
             }

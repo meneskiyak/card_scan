@@ -67,7 +67,6 @@ public class Contact {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    // ManyToMany için @JsonIgnore'ı Tag.java tarafında kullandık, o yüzden burada gerek yok.
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "contact_tag",

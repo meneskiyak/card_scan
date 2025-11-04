@@ -1,6 +1,5 @@
 package com.cardscan.cardscanbackend.service;
 
-// 🔥 YENİ: Dönüş tipi için DTO'yu import et
 import com.cardscan.cardscanbackend.dto.GeminiExtractionResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +49,6 @@ public class GeminiExtractionService {
         Metin:
         """ + rawText;
 
-        // JSON ŞEMASI
         Map<String, Object> schema = Map.of(
                 "type", "OBJECT",
                 "properties", Map.of(
@@ -97,10 +95,9 @@ public class GeminiExtractionService {
                                 "description", "Kartvizitin içeriğine göre önerilen etiketler (örn: teknoloji, finans)."
                         )
                 ),
-                "required", List.of("fullName") // Sadece isim zorunlu
+                "required", List.of("fullName")
         );
 
-        // ️GENERATION CONFIG (JSON Modunu burada açıyoruz)
         Map<String, Object> generationConfig = Map.of(
                 "responseMimeType", "application/json",
                 "responseSchema", schema
@@ -113,21 +110,19 @@ public class GeminiExtractionService {
                                 Map.of("text", prompt)
                         })
                 },
-                "generationConfig", generationConfig // Config'i buraya ekledik
+                "generationConfig", generationConfig
         );
 
-        // Header ayarları
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-goog-api-key", geminiApiKey);
 
-        // İstek gönder
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(
                 geminiApiUrl, HttpMethod.POST, entity, String.class
         );
 
-        // Yanıtı ayrıştır
         JsonNode root = objectMapper.readTree(response.getBody());
 
         if (!root.has("candidates") || root.path("candidates").isEmpty()) {
@@ -144,7 +139,6 @@ public class GeminiExtractionService {
             throw new IOException("Gemini yanıtının yapısı bozuk. 'text' alanı bulunamadı.");
         }
 
-        //  JSON -> GeminiExtractionResult dönüşümü
         GeminiExtractionResult result = objectMapper.readValue(jsonText, GeminiExtractionResult.class);
 
         return result;
