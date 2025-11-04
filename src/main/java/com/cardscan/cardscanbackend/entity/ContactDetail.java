@@ -29,7 +29,6 @@ public class ContactDetail {
     @Column(name = "value", nullable = false, columnDefinition = "TEXT")
     private String value;
 
-    // --- İlişkiler ---
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonBackReference("contact-details")

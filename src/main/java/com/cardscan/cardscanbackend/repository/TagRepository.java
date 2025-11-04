@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, UUID> {
-    // 🔥 Etiketin var olup olmadığını kontrol etmek için KRİTİK metot
     Optional<Tag> findByName(String name);
 }

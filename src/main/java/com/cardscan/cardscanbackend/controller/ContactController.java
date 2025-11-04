@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/contacts")
 public class ContactController {
@@ -28,20 +26,13 @@ public class ContactController {
         }
 
         try {
-            // TODO: OcrService'i, 'test@example.com' yerine
-            // Firebase'den gelen GÜVENLİK KİMLİĞİ ile çalışacak şekilde güncellemeliyiz.
             Contact resultCard = ocrService.processCardWithNer(file);
-
-            // Başarılı bir *oluşturma* işlemi '201 Created' dönmelidir.
             return ResponseEntity.status(HttpStatus.CREATED).body(resultCard);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
         } catch (Exception e) {
             e.printStackTrace();
+            // TODO: Daha iyi bir hata yanıtı döndür
             return ResponseEntity.status(500).body(null);
         }
     }
-
 }

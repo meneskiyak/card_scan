@@ -24,7 +24,6 @@ public class SocialAccount {
     @Column(name = "profile_url", nullable = false, columnDefinition = "TEXT")
     private String profileUrl;
 
-    // --- İlişkiler ---
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonBackReference("contact-socials")

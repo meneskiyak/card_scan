@@ -93,26 +93,25 @@
             <version>1.24.0</version>
         </dependency>
 
+        <!-- Firebase ve güvenlik bağımlılıkları -->
 
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.3.0</version>
+        </dependency>
 
-<!--        &lt;!&ndash; Deep Learning Java Bağımlılıkları &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>ai.djl</groupId>-->
-<!--            <artifactId>api</artifactId>-->
-<!--            <version>0.35.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>ai.djl.onnxruntime</groupId>-->
-<!--            <artifactId>onnxruntime-engine</artifactId>-->
-<!--            <version>0.35.0</version>-->
-<!--        </dependency>-->
+        <!-- Google storage için  -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-storage</artifactId>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>ai.djl</groupId>-->
-<!--            <artifactId>model-zoo</artifactId>-->
-<!--            <version>0.35.0</version>-->
-<!--        </dependency>-->
 
     </dependencies>
 

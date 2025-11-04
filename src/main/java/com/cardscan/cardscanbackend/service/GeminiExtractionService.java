@@ -147,9 +147,6 @@ public class GeminiExtractionService {
         //  JSON -> GeminiExtractionResult dönüşümü
         GeminiExtractionResult result = objectMapper.readValue(jsonText, GeminiExtractionResult.class);
 
-        // (İsteğe bağlı) Ham metni DTO'ya ekleyemeyiz çünkü DTO'da yeri yok.
-        // Bu bilgi OcrService'de zaten var, orada birleştireceğiz.
-
         return result;
     }
 }

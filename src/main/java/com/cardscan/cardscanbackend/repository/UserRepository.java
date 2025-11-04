@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    // 🔥 Güvenlik (Auth) için bu metoda İHTİYACIMIZ OLACAK
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByFirebaseUid(String firebaseUid);
 }

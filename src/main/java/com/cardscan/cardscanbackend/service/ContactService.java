@@ -28,10 +28,6 @@ public class ContactService {
         this.tagRepository = tagRepository;
     }
 
-    /**
-     * Gelen DTO'yu alır ve ilişkisel veritabanına kaydeder.
-     * Hata olursa tüm işlem geri alınır (@Transactional).
-     */
     @Transactional
     public Contact createContactFromExtraction(
             GeminiExtractionResult dto,
@@ -73,9 +69,9 @@ public class ContactService {
         Contact contact = new Contact();
         contact.setFullName(dto.getFullName());
         contact.setTitle(dto.getTitle());
-        contact.setUser(user);      // 🔥 İlişkiyi kur (Hangi kullanıcıya ait)
-        contact.setCompany(company);  // 🔥 İlişkiyi kur (Hangi şirkete ait)
-        contact.setTags(tags);      // 🔥 İlişkiyi kur (Hangi etiketlere sahip)
+        contact.setUser(user);
+        contact.setCompany(company);
+        contact.setTags(tags);
 
         // 4. ALT NESNELERİ (ÇOCUKLARI) OLUŞTUR VE CONTACT'A BAĞLA
 

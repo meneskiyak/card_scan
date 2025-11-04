@@ -40,13 +40,14 @@ public class User {
     @Column(name = "is_premium")
     private boolean isPremium;
 
+    @Column(name = "firebase_uid", unique = true)
+    private String firebaseUid;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private Instant createdAt;
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     private Instant updatedAt;
-
-    // --- İlişkiler (Çift Yönlü) ---
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

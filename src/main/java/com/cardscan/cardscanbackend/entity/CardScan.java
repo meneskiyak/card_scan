@@ -28,8 +28,6 @@ public class CardScan {
     @Column(name = "created_at", insertable = false, updatable = false)
     private Instant createdAt;
 
-    // --- İlişkiler ---
-    // 🔥 GÜNCELLENDİ: Artık 'OneToOne' değil, 'ManyToOne' (Foreign Key burada)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonBackReference("contact-scans")

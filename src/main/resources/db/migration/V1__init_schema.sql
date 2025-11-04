@@ -1,4 +1,4 @@
--- Diyagramınızdaki 'contact_detail_type' için özel bir tip oluşturalım
+-- Diyagramınızdaki 'contact_detail_type' için özel bir tip
 CREATE TYPE contactdetailtype AS ENUM ('PHONE', 'EMAIL', 'WEBSITE', 'ADDRESS');
 
 -- Users (Uygulama Kullanıcıları)
@@ -23,10 +23,6 @@ CREATE TABLE companies (
                            created_at TIMESTAMPTZ DEFAULT (now() AT TIME ZONE 'utc')
 );
 
--- 🔥 DEĞİŞİKLİK 1: 'contacts' tablosu 'card_scans'a referans verecek
--- Bu tabloyu 'card_scans'dan ÖNCE tanımlamamız gerekiyor ki 'contacts' ona referans verebilsin.
--- ... (Hayır, tam tersi. 'card_scans' 'contacts'a referans verecek)
--- SQL sırası: Önce 'Users', 'Companies'. Sonra 'Contacts'. Sonra 'CardScans'.
 
 -- Contacts (Kartvizit Sahipleri)
 CREATE TABLE contacts (
@@ -45,13 +41,12 @@ CREATE INDEX idx_contacts_company_id ON contacts(company_id);
 -- Card Scans (Taranan Görüntüler ve OCR Metni)
 CREATE TABLE card_scans (
                             scan_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    -- 🔥 YENİ: 'card_scans' artık 'contacts'a ait (One-to-Many için)
                             contact_id UUID NOT NULL REFERENCES contacts(contact_id) ON DELETE CASCADE,
                             image_url TEXT NOT NULL,
                             recognized_text TEXT,
                             created_at TIMESTAMPTZ DEFAULT (now() AT TIME ZONE 'utc')
 );
--- 🔥 YENİ: Index eklendi
+
 CREATE INDEX idx_card_scans_contact_id ON card_scans(contact_id);
 
 
@@ -86,6 +81,3 @@ CREATE TABLE contact_tag (
                              tag_id UUID NOT NULL REFERENCES tags(tag_id) ON DELETE CASCADE,
                              PRIMARY KEY (contact_id, tag_id)
 );
-
-INSERT INTO users (email, password_hash, full_name, internal_id)
-VALUES ('test@example.com', 'mock_password_hash', 'Test Kullanıcısı', 'test-internal-id');

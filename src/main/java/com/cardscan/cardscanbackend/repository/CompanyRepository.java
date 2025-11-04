@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, UUID> {
-    // 🔥 Şirketin var olup olmadığını kontrol etmek için KRİTİK metot
     Optional<Company> findByName(String name);
 }

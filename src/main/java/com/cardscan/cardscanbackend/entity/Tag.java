@@ -23,7 +23,6 @@ public class Tag {
     @Column(name = "name", unique = true, nullable = false, length = 100)
     private String name; // "#teknoloji", "#finans"
 
-    // --- İlişkiler (Çift Yönlü) ---
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonIgnore

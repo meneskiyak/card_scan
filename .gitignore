@@ -53,3 +53,5 @@ application-local.properties
 application-dev.properties
 application-prod.properties
 secrets/
+
+serviceAccountKey.json
