@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version> <!-- Spring Cloud GCP 5.1.x ile en uyumlu stabil Spring Boot sürümünü (3.2.0) kullanıyoruz. Sizin 3.5.7 sürümü hatalı olabilir. -->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.cardscan</groupId>
+    <artifactId>cardscan-backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>cardscan-backend</name>
+    <description>cardscan-backend</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <!-- Spring Cloud Google Cloud (GCP) Bağımlılık Yönetimi Sürümü -->
+        <spring-cloud-gcp.version>5.1.0</spring-cloud-gcp.version>
+    </properties>
+
+    <!-- Bağımlılık Yönetimi (BOM) - Tüm GCP kütüphanelerinin sürümlerini yönetir -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>spring-cloud-gcp-dependencies</artifactId>
+                <version>${spring-cloud-gcp.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Web ve REST API için zorunlu -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Google Cloud Vision API'yi otomatik konfigüre eden Spring Cloud Starter -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-vision</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL Veritabanı Sürücüsü -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok (Setter/Getter vs. için) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test Bağımlılıkları -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.genai</groupId>
+            <artifactId>google-genai</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.24.0</version>
+        </dependency>
+
+
+
+<!--        &lt;!&ndash; Deep Learning Java Bağımlılıkları &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>ai.djl</groupId>-->
+<!--            <artifactId>api</artifactId>-->
+<!--            <version>0.35.0</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>ai.djl.onnxruntime</groupId>-->
+<!--            <artifactId>onnxruntime-engine</artifactId>-->
+<!--            <version>0.35.0</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>ai.djl</groupId>-->
+<!--            <artifactId>model-zoo</artifactId>-->
+<!--            <version>0.35.0</version>-->
+<!--        </dependency>-->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
