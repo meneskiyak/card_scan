@@ -32,7 +32,6 @@ public class ContactController {
         this.contactService = contactService;
     }
 
-    /
     @PostMapping("/scan/process-image")
     public ResponseEntity<ProcessResponseDTO> processImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -84,6 +83,7 @@ public class ContactController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
     @GetMapping("/contacts/{contactId}")
     public ResponseEntity<ContactDetailDTO> getContactById(@PathVariable UUID contactId) {
         try {

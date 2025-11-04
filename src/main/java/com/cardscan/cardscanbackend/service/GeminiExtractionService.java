@@ -31,23 +31,23 @@ public class GeminiExtractionService {
 
         // PROMPT
         String prompt = """
-        Aşağıdaki metin bir kartvizitten OCR (optik karakter tanıma) ile çıkarılmıştır.
-        Bu metni incele ve belirtilen JSON şemasına uygun olarak yapılandırılmış JSON formatında çıktı üret.
-        
-        Kurallar:
-        - Metinden sosyal medya hesaplarını (linkedin, github, twitter vb.) bul ve 'socialMedia' listesine ekle.
-        - Kartvizitin genel konusuna (örn: teknoloji, finans, sağlık) göre 1-3 adet 'tag' (etiket) oluştur. Ancak bu etiketleri belirgin etiketler oalcak şekilde ayarla.
-        - Tüm telefon, e-posta, adres ve web sitelerini ilgili listelere ekle.
-
-        - 'organization' (şirket adı) alanı çok önemlidir.
-        - Şirket adı, kişi adından (fullName) ayrı bir yerde olabilir (örn: metnin sonunda, bir logonun altında).
-        - 'Enerji', 'Holding', 'Teknoloji', 'Ltd.', 'A.Ş.' gibi kurumsal ifadeler içeren veya metindeki diğer kişisel bilgilerden (telefon, email) ayrı duran marka adını bul ve 'organization' alanına ata.
-        - Kişi adlarını (örn: 'Elif Alemdar') 'organization' alanına atama.
-
-        - Çıktı sadece ve sadece istenen JSON formatında olmalıdır.
-        
-        Metin:
-        """ + rawText;
+                Aşağıdaki metin bir kartvizitten OCR (optik karakter tanıma) ile çıkarılmıştır.
+                Bu metni incele ve belirtilen JSON şemasına uygun olarak yapılandırılmış JSON formatında çıktı üret.
+                
+                Kurallar:
+                - Metinden sosyal medya hesaplarını (linkedin, github, twitter vb.) bul ve 'socialMedia' listesine ekle.
+                - Kartvizitin genel konusuna (örn: teknoloji, finans, sağlık) göre 1-3 adet 'tag' (etiket) oluştur. Ancak bu etiketleri belirgin etiketler oalcak şekilde ayarla.
+                - Tüm telefon, e-posta, adres ve web sitelerini ilgili listelere ekle.
+                
+                - 'organization' (şirket adı) alanı çok önemlidir.
+                - Şirket adı, kişi adından (fullName) ayrı bir yerde olabilir (örn: metnin sonunda, bir logonun altında).
+                - 'Enerji', 'Holding', 'Teknoloji', 'Ltd.', 'A.Ş.' gibi kurumsal ifadeler içeren veya metindeki diğer kişisel bilgilerden (telefon, email) ayrı duran marka adını bul ve 'organization' alanına ata.
+                - Kişi adlarını (örn: 'Elif Alemdar') 'organization' alanına atama.
+                
+                - Çıktı sadece ve sadece istenen JSON formatında olmalıdır.
+                
+                Metin:
+                """ + rawText;
 
         Map<String, Object> schema = Map.of(
                 "type", "OBJECT",

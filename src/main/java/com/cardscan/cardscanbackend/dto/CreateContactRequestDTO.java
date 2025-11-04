@@ -13,4 +13,5 @@ public class CreateContactRequestDTO {
     private GeminiExtractionResult confirmedData;
     private String imageUrl;
     private String rawText;
+    private String note;
 }

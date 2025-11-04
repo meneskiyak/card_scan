@@ -29,7 +29,8 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Contact> contacts = new HashSet<>();
 
-    public Tag() {}
+    public Tag() {
+    }
 
     public Tag(String name) {
         this.name = name;

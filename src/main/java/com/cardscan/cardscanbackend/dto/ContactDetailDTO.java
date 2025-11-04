@@ -14,6 +14,7 @@ public class ContactDetailDTO {
     private UUID contactId;
     private String fullName;
     private String title;
+    private String note;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -28,10 +29,10 @@ public class ContactDetailDTO {
         dto.setContactId(contact.getContactId());
         dto.setFullName(contact.getFullName());
         dto.setTitle(contact.getTitle());
+        dto.setNote(contact.getNote());
         dto.setCreatedAt(contact.getCreatedAt());
         dto.setUpdatedAt(contact.getUpdatedAt());
 
-        // Şirket 'null' olabilir
         if (contact.getCompany() != null) {
             dto.setCompany(new CompanySummaryDTO(
                     contact.getCompany().getCompanyId(),

@@ -1,6 +1,7 @@
 package com.cardscan.cardscanbackend.dto;
 
 import lombok.Data;
+
 import java.util.UUID;
 
 @Data

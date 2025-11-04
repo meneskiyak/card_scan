@@ -27,6 +27,9 @@ public class Contact {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "note", columnDefinition = "TEXT")
+    private String note;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private Instant createdAt;
 
@@ -67,7 +70,7 @@ public class Contact {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "contact_tag",
             joinColumns = @JoinColumn(name = "contact_id"),

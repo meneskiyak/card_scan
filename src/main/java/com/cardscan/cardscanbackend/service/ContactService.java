@@ -1,8 +1,8 @@
 package com.cardscan.cardscanbackend.service;
 
 import com.cardscan.cardscanbackend.dto.ContactDetailDTO;
-import com.cardscan.cardscanbackend.dto.CreateContactRequestDTO;
 import com.cardscan.cardscanbackend.dto.ContactSummaryDTO;
+import com.cardscan.cardscanbackend.dto.CreateContactRequestDTO;
 import com.cardscan.cardscanbackend.dto.GeminiExtractionResult;
 import com.cardscan.cardscanbackend.entity.*;
 import com.cardscan.cardscanbackend.repository.CompanyRepository;
@@ -72,6 +72,7 @@ public class ContactService {
         Contact contact = new Contact();
         contact.setFullName(dto.getFullName());
         contact.setTitle(dto.getTitle());
+        contact.setNote(requestDTO.getNote());
         contact.setUser(currentUser);
         contact.setCompany(company);
         contact.setTags(tags);

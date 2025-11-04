@@ -5,7 +5,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version> <!-- Spring Cloud GCP 5.1.x ile en uyumlu stabil Spring Boot sürümünü (3.2.0) kullanıyoruz. Sizin 3.5.7 sürümü hatalı olabilir. -->
+        <version>3.2.0
+        </version> <!-- Spring Cloud GCP 5.1.x ile en uyumlu stabil Spring Boot sürümünü (3.2.0) kullanıyoruz. Sizin 3.5.7 sürümü hatalı olabilir. -->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cardscan</groupId>

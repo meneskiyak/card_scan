@@ -13,5 +13,6 @@ import java.util.UUID;
 public interface ContactRepository extends JpaRepository<Contact, UUID> {
 
     List<Contact> findByUser(User user);
+
     Optional<Contact> findByContactIdAndUser(UUID contactId, User user);
 }
