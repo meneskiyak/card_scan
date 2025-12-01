@@ -20,8 +20,8 @@ import java.util.UUID;
 @RequestMapping("/api/benchmark")
 public class BenchmarkController {
 
-    private final ContactService contactService; // SQL Servisi
-    private final FirestoreService firestoreService; // NoSQL Servisi
+    private final ContactService contactService;
+    private final FirestoreService firestoreService;
     private final com.cardscan.cardscanbackend.repository.ContactRepository contactRepository;
     private final CompanyRepository companyRepository;
 
@@ -38,7 +38,6 @@ public class BenchmarkController {
     public ResponseEntity<Map<String, Object>> compareSimpleRead(@PathVariable String id) {
         Map<String, Object> results = new HashMap<>();
 
-        // ID'yi UUID formatına çevirmeyi deneyelim (SQL için lazım)
         UUID contactId;
         try {
             contactId = UUID.fromString(id);
@@ -47,7 +46,6 @@ public class BenchmarkController {
         }
 
         try {
-            // --- TEST 1: SQL (PostgreSQL - Index Scan) ---
             long startSQL = System.nanoTime();
 
             boolean sqlExists = contactRepository.findById(contactId).isPresent();
@@ -58,10 +56,8 @@ public class BenchmarkController {
             results.put("SQL_Found", sqlExists);
             results.put("SQL_Time_ms", sqlDurationMs);
 
-            // --- TEST 2: NoSQL (Firebase - Direct Lookup) ---
             long startNoSQL = System.nanoTime();
 
-            // Biz NoSQL'e kaydederken ID olarak aynı UUID stringini vermiştik
             boolean noSqlExists = firestoreService.getContactByIdNoSQL(id);
 
             long endNoSQL = System.nanoTime();
@@ -70,7 +66,6 @@ public class BenchmarkController {
             results.put("NoSQL_Found", noSqlExists);
             results.put("NoSQL_Time_ms", noSqlDurationMs);
 
-            // --- Sonuç ---
             results.put("Winner", sqlDurationMs < noSqlDurationMs ? "SQL" : "NoSQL");
 
             return ResponseEntity.ok(results);
@@ -88,37 +83,30 @@ public class BenchmarkController {
         User currentUser = (User) authentication.getPrincipal();
 
         try {
-            // --- TEST 1: SQL (PostgreSQL - Tek Satır Update) ---
             long startSQL = System.nanoTime();
 
-            // 1. Şirketi bul
             Company company = companyRepository.findByName(oldName).orElse(null);
             int sqlCount = 0;
             if (company != null) {
-                // 2. Adı güncelle ve kaydet (Sadece 1 işlem!)
                 company.setName(newName);
                 companyRepository.save(company);
-                sqlCount = 1; // SQL'de sadece 1 kayıt güncellendi
+                sqlCount = 1;
             }
 
             long endSQL = System.nanoTime();
             double sqlDurationMs = (endSQL - startSQL) / 1_000_000.0;
-            results.put("SQL_Updated_Rows", sqlCount); // Hep 1 olmalı
+            results.put("SQL_Updated_Rows", sqlCount);
             results.put("SQL_Time_ms", sqlDurationMs);
 
-            // --- TEST 2: NoSQL (Firebase - Çoklu Update) ---
             long startNoSQL = System.nanoTime();
 
-            // Burada kaç tane contact varsa o kadar işlem yapılacak
             int noSqlCount = firestoreService.updateCompanyNameNoSQL(oldName, newName, currentUser.getEmail());
 
             long endNoSQL = System.nanoTime();
             double noSqlDurationMs = (endNoSQL - startNoSQL) / 1_000_000.0;
 
-            results.put("NoSQL_Updated_Documents", noSqlCount); // Contact sayısı kadar olmalı
+            results.put("NoSQL_Updated_Documents", noSqlCount);
             results.put("NoSQL_Time_ms", noSqlDurationMs);
-
-            // --- Sonuç ---
             results.put("Winner", sqlDurationMs < noSqlDurationMs ? "SQL" : "NoSQL");
 
             return ResponseEntity.ok(results);
@@ -133,12 +121,10 @@ public class BenchmarkController {
     public ResponseEntity<Map<String, Object>> comparePerformance(@RequestBody CreateContactRequestDTO requestDTO) {
         Map<String, Object> results = new HashMap<>();
 
-        // Kullanıcıyı al
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
         try {
-            // --- TEST 1: SQL (PostgreSQL) ---
             long startSQL = System.currentTimeMillis();
 
             contactService.createContact(requestDTO, currentUser);
@@ -147,7 +133,6 @@ public class BenchmarkController {
             long sqlDuration = endSQL - startSQL;
             results.put("SQL_PostgreSQL_Time_ms", sqlDuration);
 
-            // --- TEST 2: NoSQL (Firebase Firestore) ---
             long startNoSQL = System.currentTimeMillis();
 
             firestoreService.saveContactNoSQL(requestDTO, currentUser.getEmail());
@@ -156,7 +141,6 @@ public class BenchmarkController {
             long noSqlDuration = endNoSQL - startNoSQL;
             results.put("NoSQL_Firebase_Time_ms", noSqlDuration);
 
-            // --- Analiz ---
             results.put("Winner", sqlDuration < noSqlDuration ? "SQL" : "NoSQL");
 
             return ResponseEntity.ok(results);
@@ -174,8 +158,7 @@ public class BenchmarkController {
         User currentUser = (User) authentication.getPrincipal();
 
         try {
-            // --- TEST 1: SQL (PostgreSQL - JOIN) ---
-            long startSQL = System.nanoTime(); // Daha hassas ölçüm için nanoTime
+            long startSQL = System.nanoTime();
 
             int sqlCount = contactRepository.findByUserAndTags_Name(currentUser, tagName).size();
 
@@ -185,7 +168,6 @@ public class BenchmarkController {
             results.put("SQL_Result_Count", sqlCount);
             results.put("SQL_Time_ms", sqlDurationMs);
 
-            // --- TEST 2: NoSQL (Firebase - Array Contains) ---
             long startNoSQL = System.nanoTime();
 
             int noSqlCount = firestoreService.searchContactByTagNoSQL(tagName, currentUser.getEmail());
@@ -196,7 +178,6 @@ public class BenchmarkController {
             results.put("NoSQL_Result_Count", noSqlCount);
             results.put("NoSQL_Time_ms", noSqlDurationMs);
 
-            // --- Sonuç ---
             results.put("Winner", sqlDurationMs < noSqlDurationMs ? "SQL" : "NoSQL");
 
             return ResponseEntity.ok(results);
